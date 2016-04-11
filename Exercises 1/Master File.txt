@@ -1,0 +1,123 @@
+First set of exercises:
+(1) Ex 1.1.1:
+1)
+
+%Data:
+x=0:10;
+y =[5.157 7.284 4.440 30.198 49.648 71.981 104.629 145.679 197.646 250.110 284.899];
+
+%plot:
+plot(x,y,'o');
+xlabel('x');
+ylabel('y');
+%%
+%compute matrix:
+A = sum(x.^4);
+B = sum(x.^3);
+C = sum(x.^2);
+D = sum(x);
+E = 11;
+
+M = [A B C;B C D;C D E];
+
+F = sum((x.^2).*y);
+G = sum(x.*y);
+H = sum(y);
+
+X =M\[F;G;H];
+
+%coeffecients
+a = X(1); b=X(2); c=X(3);
+
+f = a*x.^2 + b*x + c;
+%%
+hold on;
+plot(x,f);
+hold off;
+
+2)
+
+%data:
+x=0:10;
+y=[0  1.8127  3.2968  4.5119  5.5067  6.3212  6.9881  7.5340  7.9810  8.3470  8.6466];
+
+%plot:
+figure(1);
+plot(x,y,'o');
+xlabel('x');
+ylabel('y');
+hold on;
+%%
+%modelfunction +approx method:
+my_fun = @(beta,x) ((beta(1).*(1-exp(-beta(2)*x))));
+
+initials = [1,1];
+
+new_co = nlinfit(x,y,my_fun,initials);
+
+new_y = my_fun(new_co,x);
+
+plot(x,y,x,new_y);
+
+(2)
+%%
+%calculating r^2 value:
+SSR = sum((y - new_y).^2);
+SSY = sum((y - mean(y)).^2);
+r2 = 1 - (SSR/SSY);
+
+%% Results:
+% new coeffs: M=0; k=0
+% r2 = 1. Perfect fit.
+
+(3)
+
+%function handles:
+f = {@hardlim,@hardlims,@purelin,@satlin,@satlins,@logsig,@tansig,@poslin};
+
+%prompts for input:
+
+p = input('p (as vertical matrix) = ');
+W = input('W matrix of layer weights = ');
+b = input('b (a vertical list of biases) = ');
+fprintf('available transfer functions:\n1:hardlin, 2:hardlims, 3:purlin, 4:satlin, 5:satlins, 6:logsig, 7:tansig, 8:poslin\n')
+fnum = input('Please select number of function: ');
+f=f{fnum};
+
+%inputs of network:
+n = W*p + b;
+
+%activations:
+a = f(n);
+
+%results:
+display(n);
+display(a);
+
+(4)
+
+%%Weight matrix and Bias:
+% W=[1 1], b=-1.5
+%%
+%P = input('p (as vertical matrix) = '); 
+P = [.6 .9 .3 .9 .4 1;.1 .2 .2 .9 .8 .9];
+W=[1 1]; b=-1.5;
+A=hardlim(W*P+b);
+
+N=P(:, A==1); %all patterns with activation 1
+M=P(:, A==0); %all patterns with activation 0
+
+%plot boundary line
+
+x=[0:0.1:2];y=-x+1.5;%Set up boundary line
+plot(x,y);
+hold on
+
+%plot patterns
+plot(N(1,:),N(2,:),'.','markersize',12); %Plot P where A==1
+plot(M(1,:),M(2,:),'o'); %plot P where A==0
+
+fprintf('Results for activation: ');
+display(A);
+
+
