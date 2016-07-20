@@ -1,0 +1,7 @@
+As shown in the script, as different new input patterns are sent through the net, we see a an increase in their errors.
+
+This shows that as new patterns are added, their activations get further and further away from their targets.
+
+In this particular example, using the function f(v)=2*sin(3*v)+1 (where v is in [0:pi/4:2*pi] as the only target trains 
+the net on very simple data. Any other input pattern that is not in [0:pi/4:2*pi]  will have activations
+further away from the target due to this.

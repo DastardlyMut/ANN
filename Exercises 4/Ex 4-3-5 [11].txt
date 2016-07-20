@@ -1,0 +1,4 @@
+When using p=[3 -4 2] and t=[3 -3], we see that the networks trains relatively quickly at 0.014187 seconds.
+
+There is a R^2 value of 1 which suggests the regression line fits the data perfectly, however the errors still 
+sit at 8 and that's as low as they go. 
