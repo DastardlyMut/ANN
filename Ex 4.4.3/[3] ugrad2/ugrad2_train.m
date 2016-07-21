@@ -6,7 +6,7 @@ clc
 clear
 close all
 
-%% Preprocess Data
+%% Preprocess Data:
 
 data=importdata('ugraddata5.txt');
 
@@ -26,7 +26,6 @@ if q ~= qt
 end
 
 %% scale down:
-%scale down inputs by row
 %Normalize data
 pM = max(p')';
 pm = min(p')';
@@ -62,7 +61,7 @@ tn1 = tn(:,I1);
 tn2 = tn(:,I2);
 pn2 = pn(:,I2);
 
-%% Construct net and train net
+%% Construct net and train net:
 
 %network architecture
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -105,11 +104,11 @@ k=1; %epoch counter
 
 %% Send patterns through net
 while(mse>tol & k<maxit)
-    k=k+1;
-    j = round(randu(1,q1));
-    %get activations for pn
-    %permute the index randomly
     
+    %select random index
+    j = round(randu(1,q1));
+    
+    %get activations for pn
     n1=W1*pn1(:,j)+b1;
     a1=f1(n1);
     n2=W2*a1+b2;
@@ -148,6 +147,9 @@ while(mse>tol & k<maxit)
     mse = sum(sum(e).^2)/q1;
 
     EE(k)=mse;
+    
+    %increment epoch counter
+    k=k+1;
 end
 %%
 

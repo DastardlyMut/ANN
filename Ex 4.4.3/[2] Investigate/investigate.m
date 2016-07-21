@@ -28,12 +28,12 @@ plot(x1(2,:),y1(1,:));
 title('semester 1 vs school quality for fixed test mark of 50');
 
 figure
-plot(x1(1,:),y1(1,:));
-title('semester 1 vs Swedish points for fixed test mark of 50');
-
-figure
 plot(x1(2,:),y1(2,:));
 title('semester 2 vs school quality for fixed test mark of 50');
+
+figure
+plot(x1(1,:),y1(1,:));
+title('semester 1 vs Swedish points for fixed test mark of 50');
 
 figure
 plot(x1(1,:),y1(2,:));
@@ -59,12 +59,12 @@ plot(x2(2,:),y2(1,:));
 title('semester 1 vs school quality for fixed Swedish point score of 30');
 
 figure
-plot(x2(3,:),y2(1,:));
-title('semester 1 vs test marks for fixed Swedish point score of 30');
-
-figure
 plot(x2(2,:),y2(2,:));
 title('semester 2 vs school quality for fixed Swedish point score of 30');
+
+figure
+plot(x2(3,:),y2(1,:));
+title('semester 1 vs test marks for fixed Swedish point score of 30');
 
 figure
 plot(x2(3,:),y2(2,:));
