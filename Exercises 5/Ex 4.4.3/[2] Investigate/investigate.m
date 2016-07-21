@@ -42,6 +42,7 @@ title('semester 2 vs Swedish points for fixed test mark of 50');
 disp('Press any key to check the next question');
 waitforbuttonpress
 
+
 %% (b) Second question
 %fix Swedish points
 x2(1,:)=repmat(30,1,91);

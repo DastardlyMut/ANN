@@ -95,21 +95,22 @@ b3=randu(-1,1,s3,1);
 
 %set tolerance (usually <1)
 tol=1e-8;
-maxit=800;
+maxit=16000;
 h=0.05;
 mse=1;
 EE=[];
 SS=[];
 k=1; %epoch counter
 %h=input('learning rate h= '); %learning rate
-ri=randperm(q1,q1);
+
 %% Send patterns through net
 while(mse>tol & k<maxit)
     k=k+1;
-%get activations for pn
-%permute the index randomly
-
-    n1=W1*pn1(:,ri(j))+b1;
+    j = round(randu(1,q1));
+    %get activations for pn
+    %permute the index randomly
+    
+    n1=W1*pn1(:,j)+b1;
     a1=f1(n1);
     n2=W2*a1+b2;
     a2=f2(n2);
@@ -118,7 +119,7 @@ while(mse>tol & k<maxit)
     an(:,j)=a3;
 
     %compute error
-    e(:,j)=tn1(:,ri(j))-an(:,j);
+    e(:,j)=tn1(:,j)-an(:,j);
 
     %derivative matrices
     D3=eye(s3);
@@ -140,7 +141,7 @@ while(mse>tol & k<maxit)
     b3=b3-h*S3;
     W2=W2-h*S2*a1';
     b2=b2-h*S2;
-    W1=W1-h*S1*pn1(:,ri(j))';
+    W1=W1-h*S1*pn1(:,j)';
     b1=b1-h*S1;
     
     %error for epoch
