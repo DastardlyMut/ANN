@@ -59,36 +59,16 @@ xlabel('BMI/BP');
 ylabel('risk');
 title('BMI/BP vs risk');
 
-%age fixed at 0.5
-xc3(1,:)=repmat(0.5,1,91);
-%BMI/BP fixed at 0.5
-xc3(2,:)=repmat(0.5,1,91);
-%Genetic vary
-xc3(3,:)=linspace(0,1,91);
-% Fitness fixed 0.5
-xc3(4,:)=repmat(0.5,1,91);
-
-yc3=risknet(xc3);
-
-figure
-plot(xc3(3,:),yc3(1,:))
-xlabel('genetic');
-ylabel('risk');
-title('genetic vs risk');
-
-%age fixed at 0.5
-xc4(1,:)=repmat(0.5,1,91);
-%BMI/BP fixed at 0.5
-xc4(2,:)=repmat(0.5,1,91);
-%Genetic fixed at 0.5
-xc4(3,:)=repmat(0.5,1,91);
-% Fitness vary
-xc4(4,:)=linspace(0,1,91);
-
-yc4=risknet(xc4);
-
-figure
-plot(xc4(4,:),yc4(1,:))
-xlabel('fitness');
-ylabel('risk');
-title('fitness vs risk');
+%plots
+% figure
+% plot(x(3,:),y(1,:))
+% title('semester 1 vs test mark')
+% figure
+% plot(x(3,:),y(2,:))
+% title('semester 2 vs test mark')
+% figure
+% plot(x(1,:),y(1,:))
+% title('semester 1 vs Swedish points')
+% figure
+% plot(x(1,:),y(2,:))
+% title('semester 2 vs Swedish points')

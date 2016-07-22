@@ -13,7 +13,7 @@ clear a an
 %% simulate
 
 for j=1:q2
-    n1=W1*pn2(:,j)+b1;
+    n1=W1*p2(:,j)+b1;
     a1=f1(n1);
     n2=W2*a1+b2;
     a2=f2(n2);

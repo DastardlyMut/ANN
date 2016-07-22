@@ -84,7 +84,7 @@ b3=randu(-1,1,s3,1);
 %% Training parameters
 
 %set tolerance (usually <1)
-tol=1e-10;
+tol=1e-15;
 maxit=16000;
 h=0.05;
 mse=1;
