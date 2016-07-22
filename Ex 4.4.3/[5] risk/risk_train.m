@@ -8,14 +8,13 @@ clear
 close all
 
 %% Preprocess data:
-headerlines = 1
+headerlines = 1;
 %data=importdata('riskdata.txt',' ',headerlines);
 fmt = repmat('%f',1,5);
 fid = fopen('riskdata.txt', 'rt');
-datacell = textscan(fid, fmt, 'HeaderLines', headerlines, 'CollectOutput', 1);
+data = textscan(fid, fmt, 'HeaderLines', headerlines, 'CollectOutput', 1);
 fclose(fid);
-data = datacell{1};
-clear datacell
+data = cell2mat(data);
 
 %Section off input patterns and targets. Dimension s x q
 P=data(:,[1 2 3 4]);
