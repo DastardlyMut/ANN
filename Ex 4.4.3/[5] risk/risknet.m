@@ -9,10 +9,7 @@ function y=risknet(x)
     if(size(x,1) ~= r)
         error('x incorrect value');
     end
-
-%     %normalize
-%     xn=Dp*x+repmat(pc,1,size(x,2));
-
+    
     for j=1:size(x,2)
         n1=W1*x(:,j)+b1;
         a1=f1(n1);
@@ -22,7 +19,4 @@ function y=risknet(x)
         a3=f3(n3);
         y(:,j)=a3;
     end
-%     
-%     %rescale
-%     y=diag(1./tff)*(yn-repmat(tc,1,size(yn,2)));
 end
