@@ -1,12 +1,10 @@
-%school_train.m
+%momentumnet.m
 %Author: Sean Devonport
-%A script that uses a neural network to model school.txt data. Ex 4.4.3
-%[4].
-%% Clean
+%A script that constructs a neural net with a momentum factor
+%%
 clc
 clear
-close all
-
+clear all
 %% Preprocess data:
 
 data=importdata('school.txt');
@@ -61,19 +59,7 @@ tn1 = tn(:,I1);
 
 tn2 = tn(:,I2);
 pn2 = pn(:,I2);
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Construct net and train net:
-
-%network architecture
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%
-%         W1(s1Xr)          W2(s2Xs1)          W3(s3Xs2)
-%  p(2Xq)---------->a1 ------------->a2----------->----->a3(s3Xq)
-%         b1(s1X1)          b2(s2Xs1)          b3(s3Xs2)
-%
-%                   tansig          logsig          purelin
-
+%% Initiatilze architecture
 %number of neurons in each layer
 s1=9;
 s2=9;
@@ -83,28 +69,69 @@ f1=@tansig;
 f2=@logsig;
 f3=@purelin;
 
-%% Initiate Weights and bias
+k=1;
+W1(:,:,k)=randu(-1,1,s1,r);
+b1(:,:,k)=randu(-1,1,s1,1);
+W2(:,:,k)=randu(-1,1,s2,s1);
+b2(:,:,k)=randu(-1,1,s2,1);
+W3(:,:,k)=randu(-1,1,s3,s2);
+b3(:,:,k)=randu(-1,1,s3,1);
 
-W1=randu(-1,1,s1,r);
-b1=randu(-1,1,s1,1);
-W2=randu(-1,1,s2,s1);
-b2=randu(-1,1,s2,1);
-W3=randu(-1,1,s3,s2);
-b3=randu(-1,1,s3,1);
+% Propogate through net and obtain first error
+h1=0.05; % learning rate
+h2=1; % momentum
 
+for j=1:q1
+%get activations for pn
+    n1=W1*pn1(:,j)+b1;
+    a1=f1(n1);
+    n2=W2*a1+b2;
+    a2=f2(n2);
+    n3=W3*a2+b3;
+    a3=f3(n3);
+    an(:,j)=a3;
+
+    %compute error
+    e(:,j)=t1(:,j)-an(:,j);
+
+    %derivative matrices
+    D3=eye(s3);
+    D2=diag((1-a2).*a2);
+    D1=diag(1-a1.^2);
+
+    %sensitivites
+    S3= -2*D3*e(:,j);
+    S2= D2*W3'*S3;
+    S1= D1*W2'*S2;
+
+    %store sensitivities
+    SS([1:s1],k-1,1) = S1;
+    SS([s1+1:s1+s2],k-1) = S2;
+    SS([s1+s2+1:s1+s2+s3],k-1) = S3;
+
+    %update weights and biases
+    W3=W3-h1*S3*a2';
+    b3=b3-h1*S3;
+    W2=W2-h1*S2*a1';
+    b2=b2-h1*S2;
+    W1=W1-h1*S1*pn1(:,j)';
+    b1=b1-h1*S1;
+end
+
+mse = sum(sum(e).^2)/q1;
+
+E(k)=mse;
 %% Training parameters
 
 %set tolerance (usually <1)
-tol=1e-10;
+tol=1e-15;
 maxit=16000;
-h=0.05;
-mse=1;
-EE=[];
+
+E=[];
 SS=[];
-k=1; %epoch counter
 %h=input('learning rate h= '); %learning rate
 
-%% Send patterns through net
+%% Send patterns through net with momentum
 while(mse>tol & k<maxit)
     %increment epoch counter
     k=k+1;
@@ -122,7 +149,7 @@ while(mse>tol & k<maxit)
         an(:,j)=a3;
 
         %compute error
-        e(:,j)=tn1(:,j)-an(:,j);
+        e(:,j)=t1(:,j)-an(:,j);
 
         %derivative matrices
         D3=eye(s3);
@@ -140,29 +167,32 @@ while(mse>tol & k<maxit)
         SS([s1+s2+1:s1+s2+s3],k-1) = S3;
 
         %update weights and biases
-        W3=W3-h*S3*a2';
-        b3=b3-h*S3;
-        W2=W2-h*S2*a1';
-        b2=b2-h*S2;
-        W1=W1-h*S1*pn1(:,j)';
-        b1=b1-h*S1;
+        W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2'+h2*(W3(:,:,k)-W3(:,:,k-1));
+        b3(:,:,k+1)=b3(:,:,k)-h1*S3 + h2*(b3(:,:,k)-b3(:,:,k-1));
+        
+        W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1'+h2*(W2(:,:,k)-W2(:,:,k-1));
+        b2(:,:,k+1)=b2(:,:,k)-h1*S2 + h2*(b2(:,:,k) - b2(:,:,k-1));
+        
+        W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)' + h2*(W1(:,:,k)-W1(:,:,k-1));
+        b1(:,:,k+1)=b1(:,:,k)-h1*S1 + h2*(b1(:,:,k)-b1(:,:,k-1));
     end
     
     %error for epoch
     mse = sum(sum(e).^2)/q1;
 
-    EE(k)=mse;
+    E(k)=mse;
     
 end
 
+%scale up
+a=diag(1./tff)*( an-repmat(tc,1,size(t1,2)));
+
+%%
 ds=input('display sensitivities? 1=yes 0=no ');
 if ds==1
 disp('The initial and final sensitivites are:')
 SS(:,[1:10, end-10:end])
 end
-
-%scale up
-a=diag(1./tff)*( an-repmat(tc,1,size(t1,2)));
 
 %% assessing the degree of fit
 
@@ -179,8 +209,6 @@ disp('----------------------------------------------------------------------')
 
 t11=t1(1,:);
 a11=a(1,:);
-% t12=t1(2,:);
-% a12=a(2,:);
 %plot error (performance function)
 close all
 EE=EE(1:end);
@@ -213,6 +241,5 @@ hold off;
 L21=rsq(t1(1,:),L1(1,:));
 fprintf('Training: Linear fit Semester 1 %g\n',L21(1));
 
-
 %save variables
-save school_train.mat
+save momentrain.mat

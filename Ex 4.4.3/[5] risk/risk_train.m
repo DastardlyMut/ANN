@@ -9,7 +9,6 @@ close all
 
 %% Preprocess data:
 headerlines = 1;
-%data=importdata('riskdata.txt',' ',headerlines);
 fmt = repmat('%f',1,5);
 fid = fopen('riskdata.txt', 'rt');
 data = textscan(fid, fmt, 'HeaderLines', headerlines, 'CollectOutput', 1);
@@ -43,13 +42,6 @@ t1 = t(:,I1);
 
 t2 = t(:,I2);
 p2 = p(:,I2);
-
-% %Partitions (normalized)
-% pn1 = pn(:,I1);
-% tn1 = tn(:,I1);
-% 
-% tn2 = tn(:,I2);
-% pn2 = pn(:,I2);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Construct net and train net:
