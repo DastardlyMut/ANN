@@ -97,6 +97,9 @@ b3(:,:,k)=randu(-1,1,s3,1);
 
 E=[];
 
+% learning rate and momentum
+h1=0.005;
+h2=0.95;
 % Propagate batch through net to obtain first values
 for j=1:q1
     %get activations for pn
@@ -110,6 +113,27 @@ for j=1:q1
     
     % error for each pattern
     e(:,j)=t1(:,j)-an(:,j);
+    
+    % Compute sensitivities and derivative matrices
+    %derivative matrices
+    D3=eye(s3);
+    D2=diag((1-a2).*a2);
+    D1=diag(1-a1.^2);
+
+    %sensitivites
+    S3= -2*D3*e(:,j);
+    S2= D2*W3(:,:,k)'*S3;
+    S1= D1*W2(:,:,k)'*S2;
+    
+    % First update
+    W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
+    b3(:,:,k+1)=b3(:,:,k)-h1*S3;
+
+    W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
+    b2(:,:,k+1)=b3(:,:,k)-h1*S2;
+
+    W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,k)';
+    b1(:,:,k+1)=b1(:,:,k)-h1*S1;
 end
 
 % Error for epoch
@@ -117,30 +141,6 @@ mse = sum(sum(e).^2)/q1;
 % Accumulate error in vector
 E(k)=mse;
 
-% learning rate and momentum
-h1=0.005;
-h2=0.95;
-
-% Compute sensitivities and derivative matrices
-%derivative matrices
-D3=eye(s3);
-D2=diag((1-a2).*a2);
-D1=diag(1-a1.^2);
-
-%sensitivites
-S3= -2*D3*e(:,j);
-S2= D2*W3(:,:,k)'*S3;
-S1= D1*W2(:,:,k)'*S2;
-
-% First update
-W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
-b3(:,:,k+1)=b3(:,:,k)-h1*S3;
-
-W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
-b2(:,:,k+1)=b3(:,:,k)-h1*S2;
-
-W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,k)';
-b1(:,:,k+1)=b1(:,:,k)-h1*S1;
 %% Training parameters
 %set tolerance (usually <1)
 tol=0.0000001;
