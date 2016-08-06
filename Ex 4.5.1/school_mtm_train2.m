@@ -1,7 +1,6 @@
 %school_mtm_train2.m
 %Author: Sean Devonport
-%A script that uses a neural network to model school.txt data. Ex 4.4.3
-%[4].
+%A script that uses a neural network to model school.txt data. Ex 4.5.1 [1]
 %% Clean
 clc
 clear
@@ -96,12 +95,14 @@ W3(:,:,k)=randu(-1,1,s3,s2);
 b3(:,:,k)=randu(-1,1,s3,1);
 
 E=[];
-
 % learning rate and momentum
 h1=0.005;
 h2=0.95;
-% Propagate batch through net to obtain first values
+% Propagate pattern through net to obtain first values
+%   select random index
 for j=1:q1
+% j = round(randu(1,q1));
+
     %get activations for pn
     n1=W1(:,:,k)*pn1(:,j)+b1(:,:,k);
     a1=f1(n1);
@@ -110,10 +111,10 @@ for j=1:q1
     n3=W3(:,:,k)*a2+b3(:,:,k);
     a3=f3(n3);
     an(:,j)=a3;
-    
+
     % error for each pattern
     e(:,j)=t1(:,j)-an(:,j);
-    
+
     % Compute sensitivities and derivative matrices
     %derivative matrices
     D3=eye(s3);
@@ -124,7 +125,7 @@ for j=1:q1
     S3= -2*D3*e(:,j);
     S2= D2*W3(:,:,k)'*S3;
     S1= D1*W2(:,:,k)'*S2;
-    
+
     % First update
     W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
     b3(:,:,k+1)=b3(:,:,k)-h1*S3;
@@ -143,8 +144,8 @@ E(k)=mse;
 
 %% Training parameters
 %set tolerance (usually <1)
-tol=0.0000001;
-maxit=1600;
+tol=1e-10;
+maxit=24000;
 
 %% Send patterns through net
 while(mse>tol & k<maxit)
