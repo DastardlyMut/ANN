@@ -104,7 +104,8 @@ k=1; %epoch counter
 
 %% Send patterns through net
 while(mse>tol & k<maxit)
-    
+    %increment epoch counter
+    k=k+1;
     %select random index
     j = round(randu(1,q1));
     
@@ -147,9 +148,6 @@ while(mse>tol & k<maxit)
     mse = sum(sum(e).^2)/q1;
 
     EE(k)=mse;
-    
-    %increment epoch counter
-    k=k+1;
 end
 %%
 

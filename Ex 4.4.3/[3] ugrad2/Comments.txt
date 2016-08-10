@@ -5,5 +5,4 @@ I suspect this is due to the fact that it takes more epochs for the net to
 process the batch of inputs.
 
  ugrad_train.m is much more efficient since it processes the whole batch for
- every epoch. This allows for more adhjustments to be made to the weights and biases
- over every iteration of the while loop.
+ every epoch. This allows for more adjustments to be made to the weights and biases over every iteration of the while loop.

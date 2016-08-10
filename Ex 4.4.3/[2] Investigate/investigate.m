@@ -40,7 +40,7 @@ plot(x1(1,:),y1(2,:));
 title('semester 2 vs Swedish points for fixed test mark of 50');
 
 disp('Press any key to check the next question');
-waitforbuttonpress
+pause
 
 
 %% (b) Second question
@@ -71,7 +71,7 @@ plot(x2(3,:),y2(2,:));
 title('semester 2 vs test marks for fixed Swedish point score of 30');
 
 disp('Press any key to check the next question');
-waitforbuttonpress
+pause
 
 %% (c) Third question
 x3(1,:)=repmat(25,1,91);

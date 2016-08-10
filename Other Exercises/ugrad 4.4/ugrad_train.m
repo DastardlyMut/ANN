@@ -231,4 +231,4 @@ fprintf('Training: Linear fit Semester 1 %g\n',L21(1));
 fprintf('Training: Linear fit Semester 2 %g\n',L21(2));
 
 %save variables
-save 'ugrad_train.mat'
+save ugrad_train.mat
