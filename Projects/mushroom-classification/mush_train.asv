@@ -1,0 +1,26 @@
+% mush_train.m
+% Author: Sean Devonport
+% A script that trains a neural net on mushroom data
+%%
+clc;clear;close all
+% 
+% function y=encode(x)
+%     
+% end
+
+% load data
+%data=importdata('agaricus-lepiota.data',',');
+
+fid = fopen('agaricus-lepiota.data');
+tline=fgets(fid);
+data=[];
+while ischar(tline)
+    %disp(tline)
+    C=char(strsplit(tline,','))';
+    C=C(1,:);
+        data(i,:)=encode(C);
+    end
+    tline=fgets(fid);
+end
+
+fclose(fid);
