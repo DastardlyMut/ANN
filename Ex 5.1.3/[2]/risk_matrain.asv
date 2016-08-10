@@ -28,31 +28,16 @@ end
 
 %% Net architecture and training
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-s1=9; s2=9;
+s1=20;
+s2=20;
 
 net=newff(p,t,[s1,s2]);
-
-% training
-net.trainFcn='trainscg';
-
-% maxit
-net.trainParam.epochs=1000;
-
-% set the number of epochs that the error on the validation set increases
-net.trainParam.max_fail=20;
-
-%Set train,test and validation set
-[ptrain,pval,ptest,trainInd,valInd,testInd] = dividerand(p,0.6,0.2,0.2);
-[ttrain,tval,ttest] = divideind(t,trainInd,valInd,testInd);
-
 net=init(net);
-
-[net,netstruct]=train(net,p,t);
+[net,tr]=train(net,p,t);
 
 % name net and structure
-net.name='risknet';
-risknet=net;
-riskstruct=netstruct;
-
+net.name='housing';
+housingnet=net;
+housingstruct=netstruct;
 %save all variables
 save risk_matrain.mat
