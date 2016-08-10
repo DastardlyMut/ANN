@@ -9,5 +9,6 @@ function y=risk_fcn(x)
         error('x incorrect value');
     end
     
+    %y=sim(risknet,x) % commented out since it my matlab was throwing error
     y=risknet(x);
 end
