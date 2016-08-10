@@ -21,5 +21,4 @@ Backpropdemo1b
 As seen from the timings, the 3 layer neural net is the fastest with 0.002616 seconds. 
 This tells us that the transfer functions tansig, tansig and purelin are the most efficient when training.
 
-Both the one layer neural networks do not train correctly. We'd possibly need a better way to scale the data
-to get the correct activations.
+Both the one layer neural networks do not train correctly. We'd possibly need a better way to scale the data to get the correct activations.

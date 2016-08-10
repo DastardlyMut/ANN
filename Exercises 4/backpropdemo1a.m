@@ -6,14 +6,15 @@
 clear 
 clc
 close all;
-
+%%
 %generate inputs and targets
 %input pattern
 p=[0:pi/4:2*pi]';
 t=3*sin(2*p)+1;
-
-% p=[3 -4 2]';
-% t=[3 -3]';
+% p=[3;-4;2];
+% t=[3;-3];
+% p=[1;-1;0.5];
+% t=[1;-1];
 
 [r, q]=size(p);
 [s,q1]=size(t);

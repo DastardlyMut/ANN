@@ -1,4 +1,11 @@
 When using p=[3 -4 2] and t=[3 -3], we see that the networks trains relatively quickly at 0.014187 seconds.
 
-There is a R^2 value of 1 which suggests the regression line fits the data perfectly, however the errors still 
-sit at 8 and that's as low as they go. 
+There is an r^2 value of 1 which suggests the net has trained 1 input pattern to 1 target correctly. 
+
+It can be seen that the error is still high, which suggests the net has not trained correctly in fact.
+
+Upon trying to simulate on the same pattern [3;-4;2], an activation of [0.9998;-0.9998] is given which is definitely different from the the target [3;-3].
+
+Since the signs of the activation are similar, we see that multiplying the output by 3 would get us close to our target. 
+
+These observations suggest some sort of scaling procedure should be put in place which would allow the transfer function to output the correct values.

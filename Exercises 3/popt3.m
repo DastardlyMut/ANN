@@ -7,7 +7,7 @@ close all;
 clc;
 
 %initial point:
-p(:,1)=input('Please input initial point p element of [-1,1]x[-1,1] as column vector\n');
+p(:,1)=input('Please input initial point p element of [-1,1]x[-1,1] as column vector\n')[1;0]
 
 gk=[(-1)*4*(p(2,1)-p(1,1))^3+8*p(2,1)-1;
     4*(p(2,1)-p(1,1))^3+8*p(1,1) + 1];

@@ -8,7 +8,8 @@ function p=minline
     clc;
 
     %initial point
-    p(:,1)=input('Please input initial point p element of [-1,1]x[-1,1] as column vector\n');
+    p(:,1) = [0.8;-0.25]
+%     p(:,1)=input('Please input initial point p element of [-1,1]x[-1,1] as column vector\n');
     %set up for gk and Hk
 
     gk=[2*p(1,1) + p(2,1);

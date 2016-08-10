@@ -88,22 +88,21 @@ title(sprintf('Performance with tolerance = %g\n',tol));
 disp('EE=');
 disp(EE');
 
-%Uncomment to simulate.
-% %simulate
-% pnew=input('simulate on new p = ');
-% 
-% n1=W1*pnew+b1;
-% a1=f1(n1);
-% n2=W2*a1+b1;
-% a2=f2(n2);
-% 
-% disp(pnew);
-% disp('the activation is:');
-% disp(a2);
-% 
-% plot((1:(k-1)),EE);
-% xlabel('iterations');
-% ylabel('E');
-% title(sprintf('Performance with tolerance tol=%g',tol));
+%simulate
+pnew=input('simulate on new p = ');
+
+n1=W1*pnew+b1;
+a1=f1(n1);
+n2=W2*a1+b1;
+a2=f2(n2);
+
+disp(pnew);
+disp('the activation is:');
+disp(a2);
+
+plot((1:(k-1)),EE);
+xlabel('iterations');
+ylabel('E');
+title(sprintf('Performance with tolerance tol=%g',tol));
 
 

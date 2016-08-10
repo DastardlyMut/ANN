@@ -1,0 +1,5 @@
+This proves to be alot harder than it seems. 
+
+As shown in Ex 4-3-5[11], we see that a scaling procedure is needed.
+
+Provided the pattern and target lie in between -1 and 1, the net is able to train correctly (with a r^2 value of 1 and errors of 0), however, when using values which are out of this range, the net r^2 is 1 but the errors are still high. 

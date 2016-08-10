@@ -54,13 +54,6 @@ function [A,k]=nlrgd
         return;
     end
 
-%     function E=e(A,k)
-%         t=0:10;
-%         y=[0 2.67 -2.32 -0.80 2.98 -1.55 -1.61 2.83 -0.86 -2.35 2.87];
-%         E=sum(rf(t,A,k)-y).^2;
-%         return
-%     end
-
     %gradient function
     function gv=gr(p)
         A=p(1);
