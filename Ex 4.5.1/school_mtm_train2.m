@@ -87,10 +87,8 @@ k=1;
 % initialise
 W1(:,:,k)=randu(-1,1,s1,r);
 b1(:,:,k)=randu(-1,1,s1,1);
-
 W2(:,:,k)=randu(-1,1,s2,s1);
 b2(:,:,k)=randu(-1,1,s2,1);
-
 W3(:,:,k)=randu(-1,1,s3,s2);
 b3(:,:,k)=randu(-1,1,s3,1);
 
@@ -113,29 +111,29 @@ for j=1:q1
     an(:,j)=a3;
 
     % error for each pattern
-    e(:,j)=t1(:,j)-an(:,j);
-
-    % Compute sensitivities and derivative matrices
-    %derivative matrices
-    D3=eye(s3);
-    D2=diag((1-a2).*a2);
-    D1=diag(1-a1.^2);
-
-    %sensitivites
-    S3= -2*D3*e(:,j);
-    S2= D2*W3(:,:,k)'*S3;
-    S1= D1*W2(:,:,k)'*S2;
-
-    % First update
-    W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
-    b3(:,:,k+1)=b3(:,:,k)-h1*S3;
-
-    W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
-    b2(:,:,k+1)=b3(:,:,k)-h1*S2;
-
-    W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,k)';
-    b1(:,:,k+1)=b1(:,:,k)-h1*S1;
+    e(:,j)=t1(:,j)-a3;
 end
+
+% Compute sensitivities and derivative matrices
+%derivative matrices
+D3=eye(s3);
+D2=diag((1-a2).*a2);
+D1=diag(1-a1.^2);
+
+%sensitivites
+S3= -2*D3*e(:,j);
+S2= D2*W3(:,:,k)'*S3;
+S1= D1*W2(:,:,k)'*S2;
+
+% First update
+W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
+b3(:,:,k+1)=b3(:,:,k)-h1*S3;
+
+W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
+b2(:,:,k+1)=b3(:,:,k)-h1*S2;
+
+W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,k)';
+b1(:,:,k+1)=b1(:,:,k)-h1*S1;
 
 % Error for epoch
 mse = sum(sum(e).^2)/q1;
@@ -165,33 +163,34 @@ while(mse>tol & k<maxit)
         an(:,j)=a3;
 
         %compute error
-        e(:,j)=tn1(:,j)-an(:,j);
-
-        %derivative matrices
-        D3=eye(s3);
-        D2=diag((1-a2).*a2);
-        D1=diag(1-a1.^2);
-
-        %sensitivites
-        S3= -2*D3*e(:,j);
-        S2= D2*W3(:,:,k)'*S3;
-        S1= D1*W2(:,:,k)'*S2;
-
-        %store sensitivities
-        SS([1:s1],k-1,1) = S1;
-        SS([s1+1:s1+s2],k-1) = S2;
-        SS([s1+s2+1:s1+s2+s3],k-1) = S3;
-
-        %update weights and biases
-        W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2'+h2*(W3(:,:,k)-W3(:,:,k-1));
-        b3(:,:,k+1)=b3(:,:,k)-h1*S3 + h2*(b3(:,:,k)-b3(:,:,k-1));
-        
-        W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1'+h2*(W2(:,:,k)-W2(:,:,k-1)) ;
-        b2(:,:,k+1)=b2(:,:,k)-h1*S2 + h2*(b2(:,:,k)-b2(:,:,k-1));
-        
-        W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)'+h2*(W1(:,:,k)-W1(:,:,k-1));
-        b1(:,:,k+1)=b1(:,:,k)-h1*S1+h2*(b1(:,:,k)-b1(:,:,k-1));
+        e(:,j)=tn1(:,j)-a3;
     end
+    
+    
+    %derivative matrices
+    D3=eye(s3);
+    D2=diag((1-a2).*a2);
+    D1=diag(1-a1.^2);
+
+    %sensitivites
+    S3= -2*D3*e(:,j);
+    S2= D2*W3(:,:,k)'*S3;
+    S1= D1*W2(:,:,k)'*S2;
+
+    %store sensitivities
+    SS([1:s1],k-1,1) = S1;
+    SS([s1+1:s1+s2],k-1) = S2;
+    SS([s1+s2+1:s1+s2+s3],k-1) = S3;
+
+    %update weights and biases
+    W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2'+h2*(W3(:,:,k)-W3(:,:,k-1));
+    b3(:,:,k+1)=b3(:,:,k)-h1*S3 + h2*(b3(:,:,k)-b3(:,:,k-1));
+
+    W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1'+h2*(W2(:,:,k)-W2(:,:,k-1)) ;
+    b2(:,:,k+1)=b2(:,:,k)-h1*S2 + h2*(b2(:,:,k)-b2(:,:,k-1));
+
+    W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)'+h2*(W1(:,:,k)-W1(:,:,k-1));
+    b1(:,:,k+1)=b1(:,:,k)-h1*S1+h2*(b1(:,:,k)-b1(:,:,k-1));
     
     %error for epoch
     mse = sum(sum(e).^2)/q1;

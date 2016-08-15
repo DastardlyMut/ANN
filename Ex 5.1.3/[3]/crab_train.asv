@@ -1,7 +1,0 @@
-% crab_train.m
-% Author: Sean Devonport
-% Based off crab_sup.m 
-%%
-clc;clear;close all
-
-[x,t] = crab_dataset;
