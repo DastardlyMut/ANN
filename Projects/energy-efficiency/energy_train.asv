@@ -1,0 +1,12 @@
+%energy_train.m
+%Author: Sean Devonport
+%Script that trains a net on the energy efficiency data.
+%%
+clc;clear;close all
+%%
+data=xlsread('eneff.xlsx');
+
+%section off data:
+p=data(:,1:8);
+t=data(
+
