@@ -5,3 +5,5 @@
 clc;clear;close all
 
 data=xlsread('metals.xls');
+
+

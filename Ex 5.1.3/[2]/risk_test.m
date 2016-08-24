@@ -106,4 +106,4 @@ title('all')
 plotperform(netstruct)
 
 %save all variables
-save housing_test.mat
+save risk_test.mat
