@@ -81,11 +81,13 @@ r=postreg(a,t);
 rtest=postreg(atest,ttest);
 rtrain=postreg(atrain,ttrain);
 
+pause
+
 disp('MATLAB postregression')
 disp('-----------------------')
 fprintf('train r=%g\n',rtrain)
 fprintf('test r=%g\n',rtest)
-fprintf('all r=%g\n',r)
+fprintf('all r=%g\n',r)]]
 
 %plot errors on a histogram
 e=t-a;

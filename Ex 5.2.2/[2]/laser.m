@@ -6,7 +6,7 @@ clc;clear;close all
 
 load laser.mat
 
-[p,t]=delay(y,8);
+[p,t]=delay(y',8);
 m=size(p,2);
 
 s1=2;
