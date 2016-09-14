@@ -44,7 +44,7 @@ for j=1:size(S,2)
         net=init(net);
 
         %train
-        [net,netstruct]=train(net,p,t);
+        [net,netstruct]=train(net,ptrain,ttrain);
 
         %name the net and structure
         net.userdata='housing';
@@ -99,7 +99,7 @@ for j=1:size(S,2)
 
     end
 end
-%disp(' s1 r2 r')
+disp('s1xs2 r2 r')
 fprintf('Corr coef on test set')
 Ar
 fprintf('R^2 value on test set')

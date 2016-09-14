@@ -1,20 +1,15 @@
-% housing_train.m
+% crab_train.m
 % Author: Sean Devonport
-% A script that implements a strategy for deploying neural nets on housing data.
-
-% Based off results from supervisor script, I chose a neural net with 5
-% neurons in each layer.
+% Based off crab_sup.m, we see that s1=25,s2=5 is sufficient for a high
+% correlation.
 %%
-% housing
-clear 
-close all
-clc
+clc;clear;close all
 
-load housing.mat
+[p,t] = crab_dataset;
 [r,q]=size(p);
 % network architecture
 % neurons in layers 1,2
-s1=5; s2=5;
+s1=25; s2=5;
 
 net=newff(p,t,[s1,s2]);
 display(net)
@@ -41,12 +36,12 @@ net.trainParam.max_fail=20;
 net=init(net);
 
 % train
-[net, netstruct]=train(net,ptrain,ttrain);
+[net, netstruct]=train(net,p,t);
 
 %name the net and structure
-net.name='housing';
-housingnet=net;
-housingstruct=netstruct;
+net.name='crab';
+crabnet=net;
+crabstruct=netstruct;
 
 % save all the variables
-save housing_train.mat
+save crab_train.mat

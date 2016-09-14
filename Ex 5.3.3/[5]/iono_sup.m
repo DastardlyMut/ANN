@@ -1,13 +1,17 @@
-% housing_sup.m
+% iono_sup.m
 % Author: Sean Devonport
-% Supervising script for housing_train.m which checks different layer sizes
+% Script that makes multiple neural nets and tests which has best
+% performance for ionosphere problem.
 %%
-clear
-close all
-clc
+clc; clear; close all
 
-load housing.mat
+data = importdata('iondata.txt');
+
+p = [cos(2*pi*(data(:,1)/365)) sin(2*pi*(data(:,1)/365)) data(:,2) data(:,3)]';
+t = data(:,4)';
+
 [r,q]=size(p);
+
 %network architecture
 %layer sizes
 S=[5:5:30];
@@ -47,9 +51,9 @@ for j=1:size(S,2)
         [net,netstruct]=train(net,ptrain,ttrain);
 
         %name the net and structure
-        net.userdata='housing';
-        housingnet=net;
-        housingstruct=netstruct;
+        net.userdata='iono';
+        iononet=net;
+        ionostruct=netstruct;
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%
@@ -57,9 +61,9 @@ for j=1:size(S,2)
         %using our own hand-made net:
         q2=size(ptest,2);
         %simulate
-        atrain=sim(housingnet,ptrain); %train
-        atest=sim(housingnet,ptest);   %test
-        a=sim(housingnet,p);           %all
+        atrain=sim(iononet,ptrain); %train
+        atest=sim(iononet,ptest);   %test
+        a=sim(iononet,p);           %all
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %assessing the degree of fit
@@ -99,9 +103,8 @@ for j=1:size(S,2)
 
     end
 end
-disp('s1xs2 r2 r')
+%disp(' s1 r2 r')
 fprintf('Corr coef on test set')
 Ar
 fprintf('R^2 value on test set')
 Ar2
-

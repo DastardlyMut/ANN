@@ -1,0 +1,15 @@
+This was relatively simple to implement.
+
+I used a supervisor script to test different layer sizes for the 2 neuron net.
+(var saved in crab_sup.mat)
+
+From here, I deduced that 25 neurons in the 1st layer and 5 neurons in the 2nd would give the best result.
+
+I trained the network, saved the net's weights and biases.
+I tested the r^2 values and correlation coeffecient values and they were all high.
+I also used a confusion matrix to indicate the number of true positive and negatives
+
+I wrote a function that acceepts new input and classifies a crab.
+
+
+

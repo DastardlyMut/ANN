@@ -1,12 +1,13 @@
-% housing_sup.m
+% crab_sup.m
 % Author: Sean Devonport
-% Supervising script for housing_train.m which checks different layer sizes
+% 
 %%
 clear
 close all
 clc
 
-load housing.mat
+[p,t] = crab_dataset;
+
 [r,q]=size(p);
 %network architecture
 %layer sizes
@@ -44,12 +45,12 @@ for j=1:size(S,2)
         net=init(net);
 
         %train
-        [net,netstruct]=train(net,ptrain,ttrain);
+        [net,netstruct]=train(net,p,t);
 
         %name the net and structure
-        net.userdata='housing';
-        housingnet=net;
-        housingstruct=netstruct;
+        net.userdata='crab';
+        crabnet=net;
+        crabstruct=netstruct;
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%
@@ -57,9 +58,9 @@ for j=1:size(S,2)
         %using our own hand-made net:
         q2=size(ptest,2);
         %simulate
-        atrain=sim(housingnet,ptrain); %train
-        atest=sim(housingnet,ptest);   %test
-        a=sim(housingnet,p);           %all
+        atrain=sim(crabnet,ptrain); %train
+        atest=sim(crabnet,ptest);   %test
+        a=sim(crabnet,p);           %all
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %assessing the degree of fit
@@ -99,9 +100,11 @@ for j=1:size(S,2)
 
     end
 end
-disp('s1xs2 r2 r')
+%disp(' s1 r2 r')
 fprintf('Corr coef on test set')
 Ar
 fprintf('R^2 value on test set')
 Ar2
+
+
 
