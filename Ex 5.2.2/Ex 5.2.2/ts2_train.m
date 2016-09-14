@@ -1,15 +1,12 @@
-% laser_train.m
-% Author: Sean Devonport
-% Trains a net on the pulse of a laser from data set laser.mat.
+%ts2_train.m
+%Author: Sean Devonport
+%Script that trains a network using sliding window approach
 %%
-clc;clear;close all
+clc;clear all;close all
+load ts2seq.mat
 
-load laser.mat
-
-% sliding windows length 8
-[p,t]=delay(y',8);
+[p,t]=delay(x,3);
 m=size(p,2);
-
 
 s1=2;
 s2=2;
@@ -33,18 +30,14 @@ net.divideParam.trainInd=tri;
 net.divideParam.testInd=ti;
 net.divideParam.valInd=[];
 
-%Net training
-net.TrainParam.epochs=1000;
-
-%training
-net.trainFcn='trainscg';
-net.trainParam.max_fail=40;
-
+%net.trainFcn=’trainscg’;
+%set goal>0 since there is no validation set
+net.trainParam.goal=1e-8;
 %initiate the weights and biases
 net=init(net);
 %train the net
 [net,tr]=train(net,p,t);
 %rename
-lasernet=net;
+ts2net=net;
 
-save laser_train.mat
+save ts2.mat

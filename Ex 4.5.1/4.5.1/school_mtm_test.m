@@ -1,30 +1,21 @@
-%school_test.m
+%school_mtm_test.m
 %Author: Sean Devonport
-%Uses school_train.mat net and propogates test data through.
+%Uses school_mtm_train.mat net and propogates test data through.
 %%
 clc
 clear close all
 
 %load trained net.
-load school_train.mat
+load school_mtm_train.mat
 
 clear a an
 
 %% simulate
-
 for j=1:q2
-    n1=W1*pn2(:,j)+b1;
-    a1=f1(n1);
-    n2=W2*a1+b2;
-    a2=f2(n2);
-    n3=W3*a2+b3;
-    a3=f3(n3);
-    an(:,j)=a3;
+    a(:,j) = schoolmtmnet(pn2(:,j));
 end
 
 %%
-%scale up
-a=diag(1./tff)*(an-repmat(tc,1,size(t2,2)));
 
 M=[t2;a];
 disp('targets          activations');

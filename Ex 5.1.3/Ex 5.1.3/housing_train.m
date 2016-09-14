@@ -41,7 +41,7 @@ net.trainParam.max_fail=20;
 net=init(net);
 
 % train
-[net, netstruct]=train(net,ptrain,ttrain);
+[net, netstruct]=train(net,p,t);
 
 %name the net and structure
 net.name='housing';

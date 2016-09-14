@@ -9,6 +9,14 @@ load laser.mat
 [p,t]=delay(y',8);
 m=size(p,2);
 
+% segment of length 10
+ptrain = p(:,1:end-10);
+ptest = p(:,end-9:end);
+
+t       = y(9:end)';
+ttrain  = y(9:end-10)';
+ttest   = y(end-9:end)';
+
 s1=2;
 s2=2;
 
@@ -31,9 +39,13 @@ net.divideParam.trainInd=tri;
 net.divideParam.testInd=ti;
 net.divideParam.valInd=[];
 
-%net.trainFcn=’trainscg’;
-%set goal>0 since there is no validation set
-net.trainParam.goal=1e-8;
+%Net training
+net.TrainParam.epochs=1000;
+
+%training
+net.trainFcn='trainscg';
+net.trainParam.max_fail=40;
+
 %initiate the weights and biases
 net=init(net);
 %train the net

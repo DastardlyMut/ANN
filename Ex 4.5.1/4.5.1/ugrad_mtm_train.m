@@ -1,17 +1,18 @@
-%school_mtm_train.m
+%ugrad_mtm_train.m
 %Author: Sean Devonport
-%A script that constructs a neural net with a momentum factor
+%A neural network that trains using momentum.
 %%
 clc
 clear
-clear all
-%% Preprocess data:
+close all
 
-data=importdata('school.txt');
+%% Preprocess Data:
+
+data=importdata('ugraddata5.txt');
 
 %Section off input patterns and targets. Dimension s x q
-P=data(:,[1 2]);
-T=data(:,3);
+P=data(:,[1 2 3]);
+T=data(:,[4 5]);
 
 %arrange as rows
 p=P';
@@ -24,7 +25,7 @@ if q ~= qt
     error('different batch sizes');
 end
 
-%% Scale down:
+%% scale down:
 %Normalize data
 pM = max(p')';
 pm = min(p')';
@@ -59,6 +60,7 @@ tn1 = tn(:,I1);
 
 tn2 = tn(:,I2);
 pn2 = pn(:,I2);
+
 %% Construct net and train net:
 
 %network architecture
@@ -70,7 +72,6 @@ pn2 = pn(:,I2);
 %
 %                   tansig          logsig          purelin
 
-%% Initiatilze architecture
 %number of neurons in each layer
 s1=9;
 s2=9;
@@ -80,56 +81,65 @@ f1=@tansig;
 f2=@logsig;
 f3=@purelin;
 
-%% First values
-k=1;
-W1(:,:,k)=randu(-1,1,s1,r);
-b1(:,:,k)=randu(-1,1,s1,1);
+%% Initiate Weights and bias
 
-W2(:,:,k)=randu(-1,1,s2,s1);
-b2(:,:,k)=randu(-1,1,s2,1);
+W1=randu(-1,1,s1,r);
+b1=randu(-1,1,s1,1);
+W2=randu(-1,1,s2,s1);
+b2=randu(-1,1,s2,1);
+W3=randu(-1,1,s3,s2);
+b3=randu(-1,1,s3,1);
 
-W3(:,:,k)=randu(-1,1,s3,s2);
-b3(:,:,k)=randu(-1,1,s3,1);
+%% Training parameters
 
-
-E=[];
+%set tolerance (usually <1)
+tol=1e-8;
+maxit=800;
+h1=0.02;
+h2=0.8;
+mse=1;
+EE=[];
 SS=[];
-
+k=1; %epoch counter
+%h=input('learning rate h= '); %learning rate
+% propagate first batch through net
 for j=1:q1
     %get activations for pn
-    n1=W1(:,:,k)*pn1(:,j)+b1(:,:,k);
+    n1=W1*pn1(:,j)+b1;
     a1=f1(n1);
-    n2=W2(:,:,k)*a1+b2(:,:,k);
+    n2=W2*a1+b2;
     a2=f2(n2);
-    n3=W3(:,:,k)*a2+b3(:,:,k);
+    n3=W3*a2+b3;
     a3=f3(n3);
     an(:,j)=a3;
 
     %compute error
-    e(:,j)=t1(:,j)-an(:,j);
+    e(:,j)=tn1(:,j)-an(:,j);
 
-%     %derivative matrices
-%     D3=eye(s3);
-%     D2=diag((1-a2).*a2);
-%     D1=diag(1-a1.^2);
-% 
-%     %sensitivites
-%     S3= -2*D3*e(:,j);
-%     S2= D2*W3(:,:,k)'*S3;
-%     S1= D1*W2(:,:,k)'*S2;
-% 
-% %     %store sensitivities
-% %     SS([1:s1],k-1,1) = S1;
-% %     SS([s1+1:s1+s2],k-1) = S2;
-% %     SS([s1+s2+1:s1+s2+s3],k-1) = S3;
-% 
-%     %update weights and biases
-%     W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
-%     b3(:,:,k+1)=b3(:,:,k)-h1*S3;
-%     W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
-%     b2(:,:,k+1)=b2(:,:,k)-h1*S2;
-%     W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)';
-%     b1(:,:,k+1)=b1(:,:,k)-h1*S1;
+    %derivative matrices
+    D3=eye(s3);
+    D2=diag((1-a2).*a2);
+    D1=diag(1-a1.^2);
+
+    %sensitivites
+    S3= -2*D3*e(:,j);
+    S2= D2*W3'*S3;
+    S1= D1*W2'*S2;
+    
+    %update weights and biases
+    W3=W3-h1*S3*a2';
+    b3=b3-h1*S3;
+    W2=W2-h1*S2*a1';
+    b2=b2-h1*S2;
+    W1=W1-h1*S1*pn1(:,j)';
+    b1=b1-h1*S1;
+    
+    W3o = W3;
+    b3o = b3;
+    W2o = W2;
+    b2o = b2;
+    W1o = W1;
+    b1o = b1;
 end
 
 % Compute first error
@@ -137,58 +147,23 @@ mse = sum(sum(e).^2)/q1;
 
 E(k)=mse;
 
-%set tolerance (usually <1)
-tol=1e-10;
-maxit=800;
-
-% Propogate through net and obtain first error
-h1=0.005; % learning rate
-h2=0.5; % momentum
-
-%derivative matrices
-D3=eye(s3);
-D2=diag((1-a2).*a2);
-D1=diag(1-a1.^2);
-
-%sensitivites
-S3= -2*D3*e(:,j);
-S2= D2*W3(:,:,k)'*S3;
-S1= D1*W2(:,:,k)'*S2;
-
-%     %store sensitivities
-%     SS([1:s1],k-1,1) = S1;
-%     SS([s1+1:s1+s2],k-1) = S2;
-%     SS([s1+s2+1:s1+s2+s3],k-1) = S3;
-
-%update weights and biases
-W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2';
-b3(:,:,k+1)=b3(:,:,k)-h1*S3;
-
-W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1';
-b2(:,:,k+1)=b2(:,:,k)-h1*S2;
-
-W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)';
-b1(:,:,k+1)=b1(:,:,k)-h1*S1;
-
-%% Send patterns through net with momentum
-while(mse>tol & k<maxit)
+%% Send patterns through net
+while(mse>tol && k<maxit)
     %increment epoch counter
     k=k+1;
-    %select random index
-%     j = round(randu(1,q1));
-
+    % Send batch through net
     for j=1:q1
     %get activations for pn
-        n1=W1(:,:,k)*pn1(:,j)+b1(:,:,k);
+        n1=W1*pn1(:,j)+b1;
         a1=f1(n1);
-        n2=W2(:,:,k)*a1+b2(:,:,k);
+        n2=W2*a1+b2;
         a2=f2(n2);
-        n3=W3(:,:,k)*a2+b3(:,:,k);
+        n3=W3*a2+b3;
         a3=f3(n3);
         an(:,j)=a3;
 
         %compute error
-        e(:,j)=t1(:,j)-an(:,j);
+        e(:,j)=tn1(:,j)-an(:,j);
 
         %derivative matrices
         D3=eye(s3);
@@ -197,8 +172,8 @@ while(mse>tol & k<maxit)
 
         %sensitivites
         S3= -2*D3*e(:,j);
-        S2= D2*W3(:,:,k)'*S3;
-        S1= D1*W2(:,:,k)'*S2;
+        S2= D2*W3'*S3;
+        S1= D1*W2'*S2;
 
         %store sensitivities
         SS([1:s1],k-1,1) = S1;
@@ -206,59 +181,84 @@ while(mse>tol & k<maxit)
         SS([s1+s2+1:s1+s2+s3],k-1) = S3;
 
         %update weights and biases
-        W3(:,:,k+1)=W3(:,:,k)-h1*S3*a2'+h2*(W3(:,:,k)-W3(:,:,k-1));
-        b3(:,:,k+1)=b3(:,:,k)-h1*S3 + h2*(b3(:,:,k)-b3(:,:,k-1));
+        W3n=W3-h1*S3*a2'+h2*(W3-W3o);
+        b3n=b3-h1*S3 + h2*(b3-b3o);
         
-        W2(:,:,k+1)=W2(:,:,k)-h1*S2*a1'+h2*(W2(:,:,k)-W2(:,:,k-1));
-        b2(:,:,k+1)=b2(:,:,k)-h1*S2 + h2*(b2(:,:,k) - b2(:,:,k-1));
+        W2n=W2-h1*S2*a1'+h2*(W2-W2o);
+        b2n=b2-h1*S2 + h2*(b2 - b2o);
         
-        W1(:,:,k+1)=W1(:,:,k)-h1*S1*pn1(:,j)' + h2*(W1(:,:,k)-W1(:,:,k-1));
-        b1(:,:,k+1)=b1(:,:,k)-h1*S1 + h2*(b1(:,:,k)-b1(:,:,k-1));
+        W1n=W1-h1*S1*pn1(:,j)' + h2*(W1-W1o);
+        b1n=b1-h1*S1 + h2*(b1-b1o);
+        
+        W3o = W3;
+        b3o = b3;
+        W2o = W2;
+        b2o = b2;
+        W1o = W1;
+        b1o = b1;
+        W3 = W3n;
+        b3 = b3n;
+        W2 = W2n;
+        b2 = b2n;
+        W1 = W1n;
+        b1 = b1n;
     end
     
     %error for epoch
     mse = sum(sum(e).^2)/q1;
 
     E(k)=mse;
-    
 end
-
-%scale up
-a=diag(1./tff)*( an-repmat(tc,1,size(t1,2)));
-
 %%
+
 ds=input('display sensitivities? 1=yes 0=no ');
 if ds==1
 disp('The initial and final sensitivites are:')
 SS(:,[1:10, end-10:end])
 end
 
+%scale up
+a=diag(1./tff)*( an-repmat(tc,1,size(t1,2)));
+
 %% assessing the degree of fit
 
 %Rˆ2 statistic
 r2=rsq(t1(1,:),a(1,:));
+r2=[r2 rsq(t1(2,:),a(2,:))];
 
 %corrcoeff
 [R1,PV1]=corrcoef(a(1,:),t1(1,:));
-fprintf('Training: Percentage obtained in first year:\n\n');
+fprintf('Training: Semester 1:\n\n');
 fprintf(' corr coeff: %g\n p value: %g\n r2: %g\n',R1(1,2),PV1(1,2),r2(1));
 disp('----------------------------------------------------------------------')
+[R2,PV2]=corrcoef(a(2,:),t1(2,:));
+fprintf('Training: Semester 2\n\n')
+fprintf(' corr coeff: %g\n p value: %g\n r2: %g\n\n',R2(1,2),PV2(1,2),r2(2))
+disp('----------------------------------------------------------------------');
 
 %% Plots
 
 t11=t1(1,:);
 a11=a(1,:);
+t12=t1(2,:);
+a12=a(2,:);
 %plot error (performance function)
 close all
-E=E(1:end);
+EE=E(1:end);
 plot(E);
 title('MSE')
 figure
 hold on
 plot(t11,t11)
 plot(t11,a11,'*')
-title(sprintf('Training: Percentage obtained in first year with %g samples\n',q));
+title(sprintf('Training: Semester 1 with %g samples\n',q));
 hold off
+figure
+hold on
+plot(t12,t12)
+plot(t12,a12,'*')
+hold off
+title(sprintf('Training: Semester 2 with %g samples\n',q));
 
 %% Compare with Linear Model
 disp('Compare with Linear Model');
@@ -274,11 +274,19 @@ figure
 hold on
 plot(t11,t11);
 plot(t11,L1(1,:),'*');
-title('linear model: % obtained in first year');
+title('linear model: first semester');
 hold off;
 
+figure
+hold on
+plot(t12,t12);
+plot(t12,L1(2,:),'*');
+title('linear model: second semester');
+
 L21=rsq(t1(1,:),L1(1,:));
+L21=[L21 rsq(t1(2,:),L1(2,:))];
 fprintf('Training: Linear fit Semester 1 %g\n',L21(1));
+fprintf('Training: Linear fit Semester 2 %g\n',L21(2));
 
 %save variables
-save momentrain.mat
+save ugrad_mtm_train.mat
