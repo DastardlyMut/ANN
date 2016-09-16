@@ -15,10 +15,9 @@ t = data(:,4)';
 
 s1=30;
 s2=15;
-s3=10;
 
 %create the net
-net=newff(ptrain,ttrain,[s1,s2 s3]);
+net=newff(ptrain,ttrain,[s1,s2]);
 
 %display(net)
 

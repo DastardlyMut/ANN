@@ -3,7 +3,7 @@
 % Train network on numbers data
 %%
 clc; clear; close all
-
+%% Import and preprocess data:
 load numbersdata.mat
 
 % Read in numbers
@@ -17,8 +17,7 @@ t = repmat(T,1,25);
 %split into sets
 [ptrain,pval,ptest,trainInd,valInd,testInd] = dividerand(p,0.6,0.2,0.2);
 [ttrain,tval,ttest] = divideind(t,trainInd,valInd,testInd);
-
-
+%% Train net
 %create net
 net=newff(p,t,[30, 30]);
 net.divideFcn='';
@@ -29,18 +28,18 @@ net=init(net);
 [net,tr]=train(net,ptrain,ttrain);
 numbernet=net;
 
-q1=size(ptrain,2);
-%using our own hand-made net:
-q2=size(ptest,2);
 %simulate
 atrain=sim(numbernet,ptrain); %train
 atest=sim(numbernet,ptest); %test
 a=sim(numbernet,p); %all
 
 %degree of fit
-r2=rsq(ttest,atest)
-[R,pv]=corrcoef(ttest,atest)
+[r2, r] = correlation(a,t)
+r2
+r
 
 save numbers_train.mat
+
+disp('Please go to numbers_sim.m to test net with new input')
 
 

@@ -1,0 +1,15 @@
+[1]: 
+This shows that for a fixed test mark of 50, schools with lower quality get less semester marks, while school's with higher quality get better semester marks. This trend is exponential.
+
+Similarly, school with higher Swedish points get higher semester marks, while schools with lower Swedish points get lower semester marks.
+
+This suggests, the higher the school quality, the better the semester marks.
+
+[2]: 
+This shows a very exponential trend. For a school with a Swedish score of 30, the lower the test marks the lower the semester marks. However if a student gets 15% or so for a test mark, he is likely to get get 50% for his semester mark. This suggests that students (from a school with a swedish score of 30) are better at semester work than they are at writing tests.
+
+with a similar trend, a school with a low school quality is likely to get worse semester marks, however after the school has a quality of 2, we see the semester marks get to 50% or so. It would seem first semester generally goes well for students no matter what the school quality.
+
+[3]:
+As taken from the graph,
+A student would need at least 9% to be able to pass both semesters
