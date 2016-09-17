@@ -7,7 +7,7 @@ clc; clear; close all
 % generate alphabet
 [P,T] = prprob;
 p   = repmat(P,1,25);
-%disturb data
+% corrupt data
 r   = randi([1,size(P,1)],1,size(p,2)-size(P,2));
 
 for i = size(P,2)+1:size(p,2)
