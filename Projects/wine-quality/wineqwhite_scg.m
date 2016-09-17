@@ -1,21 +1,20 @@
-% mush_train.m
-% Author: Sean Devonport
-% A script that trains a neural net on mushroom data
-%%
-clc;clear;close all
-%% Load data and preprocess
-[p,t] = encode('agaricus-lepiota.data');
+data=importdata('winequality-white.csv');
+headers=data.colheaders;
+D=data.data;
+
+p = D(:,1:11)';
+t = D(:,12)';
 %% Create net
 [r,q]=size(p);
 % network architecture
 % neurons in layers 1,2
-s1=25; s2=5;
+s1=100; s2=50;s3=10;s4=1;
 
 net=newff(p,t,[s1,s2]);
 display(net)
 
 % training
-net.trainFcn='trainscg';
+net.trainFcn='traingdm';
 
 % maxit
 net.trainParam.epochs=1000;
@@ -23,12 +22,7 @@ net.trainParam.epochs=1000;
 % set the number of epochs that the error on the validation set increases
 net.trainParam.max_fail=20;
 
-%If we want to set the ratio:
-% net.divideParam.trainRatio=.7;
-% net.divideParam.testRatio=.2;
-% net.divideParam.valRatio=.1;
-
-%We can also set using:
+% Set training, testing and validation sets
 [ptrain,pval,ptest,trainInd,valInd,testInd] = dividerand(p,0.6,0.2,0.2);
 [ttrain,tval,ttest] = divideind(t,trainInd,valInd,testInd);
 
@@ -36,12 +30,12 @@ net.trainParam.max_fail=20;
 net=init(net);
 
 % train
-[net, netstruct]=train(net,p,t);
+[net, netstruct]=train(net,ptrain,ttrain);
 
 %name the net and structure
-net.name='mushrooms';
-mushnet=net;
-mushstruct=netstruct;
+net.name='wineqwhite';
+wineqwhinet=net;
+wineqwhistruct=netstruct;
 
 % save all the variables
-save mush_train.mat
+save wineqwhite_train.mat

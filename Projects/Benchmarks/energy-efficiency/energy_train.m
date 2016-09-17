@@ -1,15 +1,23 @@
-% mush_train.m
-% Author: Sean Devonport
-% A script that trains a neural net on mushroom data
+%energy_train.m
+%Author: Sean Devonport
+%Script that trains a net on the energy efficiency data. 
 %%
 clc;clear;close all
-%% Load data and preprocess
-[p,t] = encode('agaricus-lepiota.data');
-%% Create net
+%%
+data=xlsread('eneff.xlsx');
+
+%section off data:
+p=data(:,1:8);
+t=data(:,9:10);
+p=p';
+t=t';
+
 [r,q]=size(p);
 % network architecture
 % neurons in layers 1,2
-s1=25; s2=5;
+% Based off supervisor script, I choose 30 neurons in first layer and 5 in
+% second
+s1=30; s2=5;
 
 net=newff(p,t,[s1,s2]);
 display(net)
@@ -39,9 +47,10 @@ net=init(net);
 [net, netstruct]=train(net,p,t);
 
 %name the net and structure
-net.name='mushrooms';
-mushnet=net;
-mushstruct=netstruct;
+net.name='energy';
+energynet=net;
+energystruct=netstruct;
 
 % save all the variables
-save mush_train.mat
+save energy_train.mat
+

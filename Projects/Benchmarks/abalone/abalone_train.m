@@ -1,21 +1,43 @@
-% mush_train.m
+% abalone_train.m
 % Author: Sean Devonport
-% A script that trains a neural net on mushroom data
+% Script that trains net on abalone dataset.
 %%
-clc;clear;close all
-%% Load data and preprocess
-[p,t] = encode('agaricus-lepiota.data');
+clc; clear; close all
+%% Import and encode data
+data=fopen('abalone.data');
+
+D=textscan(data,'%c,%f,%f,%f,%f,%f,%f,%f,%f');
+
+D1=[];
+for i=1:size(D{1},1)
+    if D{1}(i) == 'M'
+        D1=[D1; 2];
+    elseif D{1}(i) == 'F'
+        D1=[D1; 1];
+    else
+        D1=[D1;0];
+    end
+end
+p=[D1 D{2} D{3} D{4} D{5} D{6} D{7} D{8}]';
+t=D{9}';
+
 %% Create net
 [r,q]=size(p);
 % network architecture
 % neurons in layers 1,2
-s1=25; s2=5;
+s1=25; s2=5; 
+s3=5;s4=20;
 
-net=newff(p,t,[s1,s2]);
+net=newff(p,t,[s1,s2,s3,s4]);
 display(net)
 
 % training
 net.trainFcn='trainscg';
+%net.trainFcn='traingdm';
+
+% gradient descent parameters
+% net.trainParam.lr = 0.02;
+% net.trainParam.mc = 0.85;
 
 % maxit
 net.trainParam.epochs=1000;
@@ -39,9 +61,9 @@ net=init(net);
 [net, netstruct]=train(net,p,t);
 
 %name the net and structure
-net.name='mushrooms';
-mushnet=net;
-mushstruct=netstruct;
+net.name='abalone';
+abanet=net;
+abastruct=netstruct;
 
 % save all the variables
-save mush_train.mat
+save abalone_train.mat

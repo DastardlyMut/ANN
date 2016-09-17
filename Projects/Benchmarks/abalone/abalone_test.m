@@ -1,42 +1,41 @@
-% risk_test.m
-% Author: Sean Devonport
-% Script that sees how well the net did.
+% abalone_test.m
+% Author: Sean Devonprt
+% Script that tests the abalone net.
 %%
-clear all
-close all
-clc
-load energy_train.mat
+clc;clear;close all
 
-%%
+load abalone_train.mat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 q1=size(ptrain,2);
 %
 q2=size(ptest,2);
 
 %simulate
-atrain=sim(energynet,ptrain); %train
-atest=sim(energynet,ptest); %test
-a=sim(energynet,p); %all
+atrain=round(sim(abanet,ptrain)); %train
+atest=round(sim(abanet,ptest)); %test
+a=round(sim(abanet,p)); %all
 
 %% Assessing Degree of Fit
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % train
 r2=rsq(ttrain,atrain);
 [R,PV]=corrcoef(ttrain,atrain);
 
-fprintf('Train Cooling load:\n\n')
+fprintf('Testing:\n\n')
 fprintf('  corr coeff: %g\n p value: %g\n r2: %g\n',R(1,2),PV(1,2),r2);
 disp('-------------------------------------------------------------')
 
 figure
 plot(ttrain,ttrain,ttrain,atrain,'*')
-title(sprintf('training: With %g samples \n',q))
-disp('train')
-disp('activation       target')
+title(sprintf('training: With %g samples \n r2=%g',size(ttrain,2),r2))
 
 %to see the activations:
-M=[atrain ;ttrain];
-fprintf('%4.1f\t\t\t%4.1f\n',M)
+display=input('display train activations?: 1=yes, 0=no');
+if display == 1
+    disp('train')
+    disp('activation       target')
+    M=[atrain ;ttrain];
+    fprintf('%4.1f\t\t\t%4.1f\n',M)
+end
 disp('-------------------------------------------------------------')
 
 % test:
@@ -49,48 +48,39 @@ disp('----------------------------------------------------------------------')
 
 figure
 plot(ttest,ttest,ttest,atest,'*')
-title(sprintf('Testing: With %g samples \n',q))
-% %To see the activations:
-% disp('test')
-% disp('activation      target')
-% M=[atest ;ttest];
-% fprintf('%4.1f\t\t\t%4.1f\n',M)
-% disp('----------------------------------------------------------------------')
+title(sprintf('Testing: With %g samples \n r2: %g\n',size(ttest,2),r2))
+%To see the activations:
+display=input('display activations? 1=yes, 0=no');
+if display == 1
+    disp('test')
+    disp('activation      target')
+    M=[atest ;ttest];
+    fprintf('%4.1f\t\t\t%4.1f\n',M)
+end
+disp('----------------------------------------------------------------------')
 
-%all
+% all
 r2=rsq(t,a);
 [R,PV]=corrcoef(t,a);
-fprintf('All:\n\n')
+fprintf('Testing:\n\n')
 fprintf(' corr coeff: %g\n p value: %g\n r2: %g\n',R(1,2),PV(1,2),r2)
 disp('----------------------------------------------------------------------')
 figure
 plot(t,t,t,a,'*')
-title(sprintf('All: With %g samples \n',q))
-% %To see the activations:
-% disp(’all’)
-% disp(’activation      target’)
-% M=[a ;t];
-% fprintf(’%4.1f\t\t\t%4.1f\n’,M)
-% disp('----------------------------------------------------------------------')
-
-% plot
-x=1:size(t,2);
-figure
-plot(x,t(1,:),'ob',x,a(1,:),'*r');
-xlabel('patterns')
-ylabel('heating load')
-title('heating load for all patterns')
-figure
-plot(x,t(2,:),'ob',x,a(2,:),'*r');
-xlabel('patterns')
-ylabel('cooling load')
-title('cooling load for all patterns')
-
+title(sprintf('All: With %g samples \n r2=%g\n',q,r2))
+display=input('display all activations? 1=yes,0=no');
+if display == 1
+    %To see the activations:
+    disp('all')
+    disp('activation      target')
+    M=[a ;t];
+    fprintf('%4.1f\t\t\t%4.1f\n',M)
+end
+disp('----------------------------------------------------------------------')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%
 %MATLAB post regression functions
-figure
 r=postreg(a,t);
 rtest=postreg(atest,ttest);
 rtrain=postreg(atrain,ttrain);
@@ -104,13 +94,10 @@ fprintf('all r=%g\n',r)
 %MATLAB regression plotting functions:
 plotregression(ttest,atest)
 title('test')
-plotregression(t,a)
+plotregression(ttrain,atrain)
 title('train')
 plotregression(t,a)
 title('all')
 
-%MATLAB performanc plots
-plotperform(netstruct)
-
 %save all variables
-save energy_test.mat
+save aba_test.mat

@@ -26,7 +26,6 @@ disp('-------------------------------------------------------------')
 figure
 plot(ttrain,ttrain,ttrain,atrain,'*')
 title(sprintf('training: With %g samples \n r2=%g',size(ttrain,2),r2))
-ylabel('output')
 
 %to see the activations:
 display=input('display train activations?: 1=yes, 0=no');

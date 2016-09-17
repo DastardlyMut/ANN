@@ -1,18 +1,15 @@
-%energy_sup.m
-%Author: Sean Devonport
-%Script that creates multiple nets for energy problem so we can determine
-%which is best.
+% wine_sup.m
+% Author: Sean Devonport
+% Script that creates multiple nets and selects the net with the best r and
+% r2 value.
 %%
 clc;clear;close all
-% Read in and section data
-data=xlsread('eneff.xlsx');
+%%
+%% Import and preprocess data
+data=importdata('wine.data');
 
-%section off data:
-p=data(:,1:8);
-t=data(:,9:10);
-p=p';
-t=t';
-
+p = data(:,2:14)';
+t = data(:,1)';
 [r,q]=size(p);
 %network architecture
 %layer sizes
@@ -20,7 +17,7 @@ S=[5:5:30];
 
 %matrix to store the assessments
 A=zeros(size(S,1),3);
-
+C=[]
 for j=1:size(S,2)
     for i=1:size(S,2)
         close all
@@ -102,7 +99,7 @@ for j=1:size(S,2)
         plot(ttest,ttest,ttest,atest,'*')
         title(sprintf('Testing: With %g samples s1=s2=%g\n',q,s1))
         %-------------------------------------------------
-
+        C=[C; r2 R(1,2) s1 s2];
     end
 end
 %disp(' s1 r2 r')
@@ -110,5 +107,3 @@ fprintf('Corr coef on test set')
 Ar
 fprintf('R^2 value on test set')
 Ar2
-MaxR=max(Ar)
-MaxR2=max(Ar2)
